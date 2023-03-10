@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="TrainingTaskNew">
+        <createTable tableName="CONTRACT">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_CONTRACT"/>
+            </column>
+            <column name="CUSTOMER_ID" type="UUID"/>
+            <column name="PERFORMER_ID" type="UUID"/>
+            <column name="NUMBER_" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="SIGNED_DATE" type="DATE"/>
+            <column name="TYPE_" type="INT"/>
+            <column name="DATE_FROM" type="DATE"/>
+            <column name="DATE_TO" type="DATE"/>
+            <column name="AMOUNT" type="DOUBLE"/>
+            <column name="VAT" type="DOUBLE"/>
+            <column name="TOTAL_AMOUNT" type="DOUBLE"/>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="DATETIME"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="DATETIME"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="TrainingTaskNew">
+        <createTable tableName="ORGANIZATION">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_ORGANIZATION"/>
+            </column>
+            <column name="TAX_NUMBER" type="VARCHAR(255)"/>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="REGISTRATION_NUMBER" type="VARCHAR(255)"/>
+            <column name="ESCAPE_VAT" type="BOOLEAN"/>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="DATETIME"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="DATETIME"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="3" author="TrainingTaskNew">
+        <createTable tableName="STAGE">
+            <column name="ID" type="UUID">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="PK_STAGE"/>
+            </column>
+            <column name="NAME" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DATE_FROM" type="DATE"/>
+            <column name="DATE_TO" type="DATE"/>
+            <column name="AMOUNT" type="DOUBLE"/>
+            <column name="VAT" type="DOUBLE"/>
+            <column name="TOTAL_AMOUNT" type="DOUBLE"/>
+            <column name="DESCRIPTION" type="CLOB"/>
+            <column name="VERSION" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="CREATED_BY" type="VARCHAR(255)"/>
+            <column name="CREATED_DATE" type="DATETIME"/>
+            <column name="LAST_MODIFIED_BY" type="VARCHAR(255)"/>
+            <column name="LAST_MODIFIED_DATE" type="DATETIME"/>
+            <column name="DELETED_BY" type="VARCHAR(255)"/>
+            <column name="DELETED_DATE" type="DATETIME"/>
+            <column name="CONTRACT_ID" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="4" author="TrainingTaskNew">
+        <createIndex indexName="IDX_CONTRACT_CUSTOMER" tableName="CONTRACT">
+            <column name="CUSTOMER_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="CUSTOMER_ID" baseTableName="CONTRACT"
+                                 constraintName="FK_CONTRACT_ON_CUSTOMER" referencedColumnNames="ID"
+                                 referencedTableName="ORGANIZATION"/>
+    </changeSet>
+    <changeSet id="5" author="TrainingTaskNew">
+        <createIndex indexName="IDX_CONTRACT_PERFORMER" tableName="CONTRACT">
+            <column name="PERFORMER_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="PERFORMER_ID" baseTableName="CONTRACT"
+                                 constraintName="FK_CONTRACT_ON_PERFORMER" referencedColumnNames="ID"
+                                 referencedTableName="ORGANIZATION"/>
+    </changeSet>
+    <changeSet id="6" author="TrainingTaskNew">
+        <createIndex indexName="IDX_STAGE_CONTRACT" tableName="STAGE">
+            <column name="CONTRACT_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="CONTRACT_ID" baseTableName="STAGE"
+                                 constraintName="FK_STAGE_ON_CONTRACT" referencedColumnNames="ID"
+                                 referencedTableName="CONTRACT"/>
+    </changeSet>
+</databaseChangeLog>

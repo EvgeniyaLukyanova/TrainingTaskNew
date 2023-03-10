@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<window xmlns="http://jmix.io/schema/ui/window"
+        caption="msg://contractEdit.caption"
+        focusComponent="form">
+    <data>
+        <instance id="contractDc"
+                  class="com.gazpromtrans.trainingtasknew.entity.Contract">
+            <fetchPlan extends="_base">
+                <property name="stage" fetchPlan="_base"/>
+                <property name="performer" fetchPlan="_base"/>
+                <property name="customer" fetchPlan="_base"/>
+                <property name="state" fetchPlan="_base"/>
+            </fetchPlan>
+            <loader/>
+            <collection id="stageDc" property="stage"/>
+        </instance>
+    </data>
+    <facets>
+        <dataLoadCoordinator auto="true"/>
+        <screenSettings id="settingsFacet" auto="true"/>
+    </facets>
+    <actions>
+        <action id="windowCommitAndClose" caption="msg:///actions.Ok"
+                icon="EDITOR_OK"
+                primary="true"
+                shortcut="${COMMIT_SHORTCUT}"/>
+        <action id="windowClose"
+                caption="msg:///actions.Close"
+                icon="EDITOR_CANCEL"/>
+        <action id="unLoadFiles"
+                caption="Выгрузка файлов"/>
+        <action id="changeState"/>
+        <action id="stateCancel" caption="Отменён"/>
+    </actions>
+    <dialogMode height="600"
+                width="800"/>
+    <layout spacing="true" expand="scrollBox">
+        <scrollBox id="scrollBox" spacing="true">
+            <form id="form" dataContainer="contractDc">
+                <column width="350px">
+                    <textField id="numberField" property="number" caption="msg://numberField.caption"/>
+                    <dateField id="signedDateField" property="signedDate"/>
+                    <comboBox id="typeField" property="type"/>
+                    <dateField id="dateFromField" property="dateFrom"/>
+                    <dateField id="dateToField" property="dateTo"/>
+                    <textField id="amountField" property="amount"/>
+                    <textField id="vatField" property="vat" editable="false"/>
+                    <textField id="totalAmountField" property="totalAmount" editable="false"/>
+                    <entityPicker id="performerField" property="performer"/>
+                    <entityPicker id="customerField" property="customer"/>
+                    <entityPicker id="stateField" property="state" enable="false"/>
+                </column>
+            </form>
+            <buttonsPanel>
+                <fileMultiUpload id="filesField" caption = "Загрузка фалов"/>
+                <button id="unLoad" action ="unLoadFiles"/>
+                <button id="changeState" action ="changeState"/>
+                <button id="stateCancel" action ="stateCancel"/>
+            </buttonsPanel>
+            <groupBox id="stageBox" caption="msg://com.gazpromtrans.trainingtasknew.entity/Contract.stage">
+                <table id="stageTable" dataContainer="stageDc" width="100%" height="200px">
+                    <actions>
+                        <action id="create" type="create"/>
+                        <action id="edit" type="edit"/>
+                        <action id="remove" type="remove"/>
+                    </actions>
+                    <columns>
+                        <column id="name"/>
+                        <column id="dateFrom"/>
+                        <column id="dateTo"/>
+                        <column id="amount"/>
+                        <column id="vat"/>
+                        <column id="totalAmount"/>
+                        <column id="description"/>
+                    </columns>
+                    <buttonsPanel>
+                        <button action="stageTable.create"/>
+                        <button action="stageTable.edit"/>
+                        <button action="stageTable.remove"/>
+                    </buttonsPanel>
+                </table>
+            </groupBox>
+        </scrollBox>
+        <hbox id="editActions" spacing="true">
+            <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
+            <button id="closeBtn" action="windowClose"/>
+        </hbox>
+    </layout>
+</window>

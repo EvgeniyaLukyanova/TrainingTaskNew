@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.11.xsd"
+        objectQuotingStrategy="QUOTE_ONLY_RESERVED_WORDS">
+    <changeSet id="1" author="TrainingTaskNew">
+        <addColumn tableName="FILE_DESCRIPTOR">
+            <column name="INVOICE_ID" type="UUID"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="2" author="TrainingTaskNew">
+        <createIndex indexName="IDX_FILE_DESCRIPTOR_INVOICE" tableName="FILE_DESCRIPTOR">
+            <column name="INVOICE_ID"/>
+        </createIndex>
+
+        <addForeignKeyConstraint baseColumnNames="INVOICE_ID" baseTableName="FILE_DESCRIPTOR"
+                                 constraintName="FK_FILE_DESCRIPTOR_ON_INVOICE" referencedColumnNames="ID"
+                                 referencedTableName="INVOICE"/>
+    </changeSet>
+</databaseChangeLog>

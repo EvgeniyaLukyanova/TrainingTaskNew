@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://jmix.io/schema/ui/menu">
+
+    <menu id="application" caption="msg://com.gazpromtrans.trainingtasknew/menu.application" insertBefore="administration">
+        <item screen="User.browse" caption="msg://com.gazpromtrans.trainingtasknew.screen.user/UserBrowse.caption"/>
+        <item screen="themeSettingsScreen" caption="msg://io.jmix.ui.app.themesettings/themeSettings.caption"/>
+        <item screen="Organization.browse"
+              caption="msg://com.gazpromtrans.trainingtasknew.screen.organization/organizationBrowse.menu"/>
+        <item screen="Contract.browse"
+              caption="msg://com.gazpromtrans.trainingtasknew.screen.contract/contractBrowse.menu"/>
+        <item screen="State.browse" caption="msg://com.gazpromtrans.trainingtasknew.screen.state/stateBrowse.menu"/>
+    </menu>
+
+</menu-config>

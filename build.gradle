@@ -1,0 +1,66 @@
+plugins {
+    id 'io.jmix' version '1.4.3'
+    id 'java'
+}
+
+apply plugin: 'org.springframework.boot'
+
+jmix {
+    bomVersion = '1.4.3'
+}
+
+group = 'com.gazpromtrans'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    maven {
+        url 'http://mos-rep-ol7.gptrans.gazprom.ru:8082/artifactory/jmix_global/'
+        setAllowInsecureProtocol(true)
+    }
+    maven {
+        url 'http://mos-rep-ol7.gptrans.gazprom.ru:8082/artifactory/jmix_premium/'
+        setAllowInsecureProtocol(true)
+    }
+    maven {
+        url 'http://mos-rep-ol7.gptrans.gazprom.ru:8082/artifactory/Maven_Repo/'
+        setAllowInsecureProtocol(true)
+    }
+    maven {
+        url 'http://mos-rep-ol7.gptrans.gazprom.ru:8082/artifactory/Gradle_Repo/'
+        setAllowInsecureProtocol(true)
+    }
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'io.jmix.core:jmix-core-starter'
+    implementation 'io.jmix.data:jmix-eclipselink-starter'
+    implementation 'io.jmix.ui:jmix-ui-starter'
+    implementation 'io.jmix.ui:jmix-ui-data-starter'
+    implementation 'io.jmix.ui:jmix-ui-themes-compiled'
+    implementation 'io.jmix.ui:jmix-ui-widgets-compiled'
+    implementation 'io.jmix.security:jmix-security-starter'
+    implementation 'io.jmix.security:jmix-security-ui-starter'
+    implementation 'io.jmix.security:jmix-security-data-starter'
+    implementation 'io.jmix.localfs:jmix-localfs-starter'
+    implementation 'io.jmix.datatools:jmix-datatools-starter'
+    implementation 'io.jmix.datatools:jmix-datatools-ui-starter'
+    implementation 'io.jmix.bpm:jmix-bpm-starter'
+    implementation 'io.jmix.bpm:jmix-bpm-ui-starter'
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation("io.jmix.appsettings:jmix-appsettings-starter")
+    implementation("io.jmix.appsettings:jmix-appsettings-ui-starter")
+    implementation 'io.jmix.localfs:jmix-localfs-starter'
+
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    implementation 'org.postgresql:postgresql'
+}
+
+test {
+    useJUnitPlatform()
+}

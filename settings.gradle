@@ -1,0 +1,11 @@
+pluginManagement {
+    repositories {
+        maven {
+            url "http://mos-rep-ol7.gptrans.gazprom.ru:8082/artifactory/Gradle_Repo/"
+            setAllowInsecureProtocol(true)
+        }
+        gradlePluginPortal()
+    }
+}
+
+rootProject.name = 'TrainingTaskNew'
