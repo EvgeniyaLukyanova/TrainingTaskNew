@@ -18,7 +18,9 @@ import java.util.List;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "INVOICE")
+@Table(name = "INVOICE", indexes = {
+        @Index(name = "IDX_INVOICE_STAGE", columnList = "STAGE_ID")
+})
 @Entity
 public class Invoice {
     @JmixGeneratedValue
@@ -37,7 +39,7 @@ public class Invoice {
     private Double amount;
 
     @Column(name = "NDS")
-    private Double nds;
+    private Double vat;
 
     @Column(name = "TOTAL_AMOUNT")
     private Double totalAmount;
@@ -45,6 +47,10 @@ public class Invoice {
     @InstanceName
     @Column(name = "DESCRIPTION")
     private String description;
+
+    @JoinColumn(name = "STAGE_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Stage stage;
 
     @OneToMany(mappedBy = "invoice")
     private List<FileDescriptor> file;
@@ -80,6 +86,14 @@ public class Invoice {
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedDate;
 
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
     public List<FileDescriptor> getFile() {
         return file;
     }
@@ -104,12 +118,12 @@ public class Invoice {
         this.totalAmount = totalAmount;
     }
 
-    public Double getNds() {
-        return nds;
+    public Double getVat() {
+        return vat;
     }
 
-    public void setNds(Double nds) {
-        this.nds = nds;
+    public void setVat(Double vat) {
+        this.vat = vat;
     }
 
     public Double getAmount() {

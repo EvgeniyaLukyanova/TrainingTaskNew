@@ -88,6 +88,16 @@ public class Stage {
     @JoinColumn(name = "CONTRACT_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Contract contract;
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "stage")
+    private Invoice invoice;
+
+    public Invoice getInvoice() {
+        return invoice;
+    }
+
+    public void setInvoice(Invoice invoice) {
+        this.invoice = invoice;
+    }
 
     public Contract getContract() {
         return contract;

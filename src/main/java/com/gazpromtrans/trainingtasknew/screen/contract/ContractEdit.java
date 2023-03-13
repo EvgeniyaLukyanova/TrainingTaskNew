@@ -1,6 +1,7 @@
 package com.gazpromtrans.trainingtasknew.screen.contract;
 
 import com.gazpromtrans.trainingtasknew.entity.*;
+import com.gazpromtrans.trainingtasknew.screen.invoice.InvoiceEdit;
 import io.jmix.bpmui.processform.ProcessFormContext;
 import io.jmix.bpmui.processform.annotation.Outcome;
 import io.jmix.bpmui.processform.annotation.Param;
@@ -14,6 +15,7 @@ import io.jmix.core.querycondition.PropertyCondition;
 import io.jmix.core.security.CurrentAuthentication;
 import io.jmix.ui.Dialogs;
 import io.jmix.ui.Notifications;
+import io.jmix.ui.ScreenBuilders;
 import io.jmix.ui.UiComponents;
 import io.jmix.ui.action.Action;
 import io.jmix.ui.app.inputdialog.DialogActions;
@@ -48,7 +50,6 @@ import java.util.*;
 @UiDescriptor("contract-edit.xml")
 @EditedEntityContainer("contractDc")
 public class ContractEdit extends StandardEditor<Contract> {
-
     @Autowired
     private CollectionPropertyContainer<Stage> stageDc;
     @Autowired
@@ -76,6 +77,8 @@ public class ContractEdit extends StandardEditor<Contract> {
     @Autowired
     private Downloader downloader;
     @Autowired
+    private ScreenBuilders screenBuilders;
+    @Autowired
     private ProcessFormContext processFormContext;
     @ProcessFormParam(name = "item")
     protected Contract contract;
@@ -89,7 +92,8 @@ public class ContractEdit extends StandardEditor<Contract> {
     private Button unLoad;
     @Autowired
     private Button stateCancel;
-    //На согласовании
+    @Autowired
+    private Table<Stage> stageTable;
 
     @Subscribe("unLoadFiles")
     public void onUnLoadFiles(Action.ActionPerformedEvent event) {
@@ -172,31 +176,46 @@ public class ContractEdit extends StandardEditor<Contract> {
     public void onStateCancel(Action.ActionPerformedEvent event) {
         State st = dataManager.load(State.class).condition(PropertyCondition.equal("name", "Отеменён")).optional().orElse(null);
         getEditedEntity().setState(st);
-        processFormContext.taskCompletion()
-                .withOutcome("stateCancel")
-                .saveInjectedProcessVariables()
-                .complete();
-        //closeWithDefaultAction();
-        close(WINDOW_COMMIT_AND_CLOSE_ACTION);
+        closeWithDefaultAction();
+//        processFormContext.taskCompletion()
+//                .withOutcome("stateCancel")
+//                .saveInjectedProcessVariables()
+//                .complete();
+//        closeWithDefaultAction();
     }
 
     @Subscribe("changeState")
     public void onChangeState(Action.ActionPerformedEvent event) {
         State st = dataManager.load(State.class).condition(PropertyCondition.equal("name", state)).optional().orElse(null);
         getEditedEntity().setState(st);
-        OperationResult r = closeWithDefaultAction();
-        r.then(() -> {
-
-            processFormContext.taskCompletion()
-                    .withOutcome("changeState")
-                    .saveInjectedProcessVariables()
-                    .complete();
-        });
+        closeWithDefaultAction();
+//        OperationResult r = closeWithDefaultAction();
+//        r.then(() -> {
+//            processFormContext.taskCompletion()
+//                    .withOutcome("changeState")
+//                    .saveInjectedProcessVariables()
+//                    .complete();
+//        });
     }
 
     @Subscribe
     public void onAfterCommitChanges(AfterCommitChangesEvent event) {
-
+        if (state != null) {
+            State st = dataManager.load(State.class).condition(PropertyCondition.equal("name", state)).optional().orElse(null);
+            if (getEditedEntity().getState().equals(st)) {
+                processFormContext.taskCompletion()
+                        .withOutcome("changeState")
+                        .saveInjectedProcessVariables()
+                        .complete();
+            }
+            State stCancel = dataManager.load(State.class).condition(PropertyCondition.equal("name", "Отеменён")).optional().orElse(null);
+            if (getEditedEntity().getState().equals(stCancel)) {
+                processFormContext.taskCompletion()
+                        .withOutcome("stateCancel")
+                        .saveInjectedProcessVariables()
+                        .complete();
+            }
+        }
     }
 
     @Subscribe
@@ -243,6 +262,30 @@ public class ContractEdit extends StandardEditor<Contract> {
                     .mapToDouble(e -> e.getTotalAmount())
                     .sum());
         });
+    }
+
+    @Subscribe("stageTable.createInvoice")
+    public void onStageTableCreateInvoice(Action.ActionPerformedEvent event) {
+        if (stageTable.getSingleSelected().getInvoice() != null) {
+            screenBuilders.editor(Invoice.class, this)
+                    .editEntity(stageTable.getSingleSelected().getInvoice())
+                    .withOpenMode(OpenMode.DIALOG)
+                    .build()
+                    .show();
+        } else {
+            screenBuilders.editor(Invoice.class, this)
+                    .newEntity()
+                    .withInitializer(invoice -> {
+                        invoice.setAmount(stageTable.getSingleSelected().getAmount());
+                        invoice.setVat(stageTable.getSingleSelected().getVat());
+                        invoice.setTotalAmount(stageTable.getSingleSelected().getTotalAmount());
+                        invoice.setDescription(stageTable.getSingleSelected().getDescription());
+                        invoice.setStage(stageTable.getSingleSelected());
+                    })
+                    .withOpenMode(OpenMode.DIALOG)
+                    .build()
+                    .show();
+        }
     }
     
 }

@@ -9,6 +9,8 @@
         <item screen="Contract.browse"
               caption="msg://com.gazpromtrans.trainingtasknew.screen.contract/contractBrowse.menu"/>
         <item screen="State.browse" caption="msg://com.gazpromtrans.trainingtasknew.screen.state/stateBrowse.menu"/>
+        <item screen="Invoice.browse"
+              caption="msg://com.gazpromtrans.trainingtasknew.screen.invoice/invoiceBrowse.menu"/>
     </menu>
 
 </menu-config>

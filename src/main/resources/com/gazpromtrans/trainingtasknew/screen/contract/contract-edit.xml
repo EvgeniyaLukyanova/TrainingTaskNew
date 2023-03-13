@@ -63,6 +63,7 @@
                         <action id="create" type="create"/>
                         <action id="edit" type="edit"/>
                         <action id="remove" type="remove"/>
+                        <action id="createInvoice" trackSelection="true"/>
                     </actions>
                     <columns>
                         <column id="name"/>
@@ -74,9 +75,10 @@
                         <column id="description"/>
                     </columns>
                     <buttonsPanel>
-                        <button action="stageTable.create"/>
-                        <button action="stageTable.edit"/>
-                        <button action="stageTable.remove"/>
+                        <button action="stageTable.create" caption="msg://button1.caption"/>
+                        <button action="stageTable.edit" caption="msg://button2.caption"/>
+                        <button action="stageTable.remove" caption="msg://button3.caption"/>
+                        <button action="stageTable.createInvoice" caption="msg://button.caption"/>
                     </buttonsPanel>
                 </table>
             </groupBox>

@@ -10,7 +10,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import javax.annotation.Nullable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -25,7 +24,7 @@ public class State {
     @Id
     private UUID id;
 
-    @Column(name = "CODE", unique = true, nullable = true)
+    @Column(name = "CODE", unique = true)
     @NotNull
     private Integer code;
 
