@@ -27,19 +27,24 @@
     <dialogMode height="600"
                 width="800"/>
     <layout spacing="true" expand="scrollBox">
-        <scrollBox id="scrollBox" spacing="true">
-            <form id="form" dataContainer="invoiceDc">
-                <column width="350px">
-                    <textField id="numberField" property="number"/>
-                    <dateField id="dateField" property="date"/>
-                    <textField id="amountField" property="amount"/>
-                    <textField id="ndsField" property="vat"/>
-                    <textField id="totalAmountField" property="totalAmount"/>
-                    <textField id="descriptionField" property="description"/>
-                    <entityPicker id="stageField" property="stage" visible="false"/>
-                </column>
-            </form>
-        </scrollBox>
+            <scrollBox id="scrollBox" spacing="true">
+                <hbox spacing="true">
+                    <form id="form" dataContainer="invoiceDc">
+                        <column width="350px">
+                            <textField id="numberField" property="number"/>
+                            <dateField id="dateField" property="date"/>
+                            <textField id="amountField" property="amount"/>
+                            <textField id="ndsField" property="vat"/>
+                            <textField id="totalAmountField" property="totalAmount"/>
+                            <textField id="descriptionField" property="description"/>
+                            <entityPicker id="stageField" property="stage" visible="false"/>
+                        </column>
+                    </form>
+                    <buttonsPanel>
+                       <button id="print" caption="msg://button.caption"/>
+                    </buttonsPanel>
+                </hbox>
+            </scrollBox>
         <hbox id="editActions" spacing="true">
             <button id="commitAndCloseBtn" action="windowCommitAndClose"/>
             <button id="closeBtn" action="windowClose"/>
