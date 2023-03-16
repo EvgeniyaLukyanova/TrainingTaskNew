@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://jmix.io/schema/ui/window"
         xmlns:c="http://jmix.io/schema/ui/jpql-condition"
-        caption="msg://contractBrowse.caption"
-        focusComponent="contractsTable">
+        caption="msg://serviceCompletionCertificateBrowse.caption"
+        focusComponent="serviceCompletionCertificatesTable">
     <data readOnly="true">
-        <collection id="contractsDc"
-                    class="com.gazpromtrans.trainingtasknew.entity.Contract">
-            <fetchPlan extends="_base">
-                <property name="stage" fetchPlan="_base"/>
-                <property name="performer" fetchPlan="_base"/>
-                <property name="customer" fetchPlan="_base"/>
-                <property name="state" fetchPlan="_base"/>
-            </fetchPlan>
-            <loader id="contractsDl">
+        <collection id="serviceCompletionCertificatesDc"
+                    class="com.gazpromtrans.trainingtasknew.entity.ServiceCompletionCertificate">
+            <fetchPlan extends="_base"/>
+            <loader id="serviceCompletionCertificatesDl">
                 <query>
-                    <![CDATA[select e from Contract e]]>
+                    <![CDATA[select e from ServiceCompletionCertificate e]]>
                 </query>
             </loader>
         </collection>
@@ -35,14 +30,14 @@
     </actions>
     <dialogMode height="600"
                 width="800"/>
-    <layout expand="contractsTable" spacing="true">
+    <layout expand="serviceCompletionCertificatesTable" spacing="true">
         <filter id="filter"
-                dataLoader="contractsDl">
+                dataLoader="serviceCompletionCertificatesDl">
             <properties include=".*"/>
         </filter>
-        <groupTable id="contractsTable"
+        <groupTable id="serviceCompletionCertificatesTable"
                     width="100%"
-                    dataContainer="contractsDc">
+                    dataContainer="serviceCompletionCertificatesDc">
             <actions>
                 <action id="create" type="create"/>
                 <action id="edit" type="edit"/>
@@ -50,23 +45,18 @@
             </actions>
             <columns>
                 <column id="number"/>
-                <column id="signedDate"/>
-                <column id="type"/>
-                <column id="dateFrom"/>
-                <column id="dateTo"/>
+                <column id="date"/>
                 <column id="amount"/>
                 <column id="vat"/>
                 <column id="totalAmount"/>
-                <column id="state"/>
-                <column id="customerSigner"/>
-                <column id="performerSigner"/>
+                <column id="description"/>
             </columns>
             <simplePagination/>
             <buttonsPanel id="buttonsPanel"
                           alwaysVisible="true">
-                <button id="createBtn" action="contractsTable.create"/>
-                <button id="editBtn" action="contractsTable.edit"/>
-                <button id="removeBtn" action="contractsTable.remove"/>
+                <button id="createBtn" action="serviceCompletionCertificatesTable.create"/>
+                <button id="editBtn" action="serviceCompletionCertificatesTable.edit"/>
+                <button id="removeBtn" action="serviceCompletionCertificatesTable.remove"/>
             </buttonsPanel>
         </groupTable>
         <hbox id="lookupActions" spacing="true" visible="false">

@@ -37,6 +37,9 @@ public class Contract {
     @ManyToOne(fetch = FetchType.LAZY)
     private Organization customer;
 
+    @Column(name = "CUSTOMER_SIGNER")
+    private String customerSigner;
+
     @JoinColumn(name = "STATE_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private State state;
@@ -44,6 +47,9 @@ public class Contract {
     @JoinColumn(name = "PERFORMER_ID")
     @ManyToOne(fetch = FetchType.LAZY)
     private Organization performer;
+
+    @Column(name = "PERFORMER_SIGNER")
+    private String performerSigner;
 
     @InstanceName
     @Column(name = "NUMBER_", nullable = false)
@@ -109,6 +115,22 @@ public class Contract {
     @Column(name = "DELETED_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedDate;
+
+    public String getPerformerSigner() {
+        return performerSigner;
+    }
+
+    public void setPerformerSigner(String performerSigner) {
+        this.performerSigner = performerSigner;
+    }
+
+    public String getCustomerSigner() {
+        return customerSigner;
+    }
+
+    public void setCustomerSigner(String customerSigner) {
+        this.customerSigner = customerSigner;
+    }
 
     public void setFile(List<FileDescriptor> file) {
         this.file = file;

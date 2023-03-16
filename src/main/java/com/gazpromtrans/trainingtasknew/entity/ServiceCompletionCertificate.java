@@ -1,10 +1,8 @@
 package com.gazpromtrans.trainingtasknew.entity;
 
-import io.jmix.core.DeletePolicy;
 import io.jmix.core.annotation.DeletedBy;
 import io.jmix.core.annotation.DeletedDate;
 import io.jmix.core.entity.annotation.JmixGeneratedValue;
-import io.jmix.core.entity.annotation.OnDeleteInverse;
 import io.jmix.core.metamodel.annotation.InstanceName;
 import io.jmix.core.metamodel.annotation.JmixEntity;
 import org.springframework.data.annotation.CreatedBy;
@@ -19,26 +17,26 @@ import java.util.Date;
 import java.util.UUID;
 
 @JmixEntity
-@Table(name = "STAGE", indexes = {
-        @Index(name = "IDX_STAGE_CONTRACT", columnList = "CONTRACT_ID")
+@Table(name = "SERVICE_COMPLETION_CERTIFICATE", indexes = {
+        @Index(name = "IDX_SERVICECOMPLETIONCER_STAGE", columnList = "STAGE_ID")
 })
 @Entity
-public class Stage {
+public class ServiceCompletionCertificate {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)
     @Id
     private UUID id;
 
-    @InstanceName
-    @Column(name = "NAME", nullable = false)
     @NotNull
-    private String name;
+    @Column(name = "NUMBER_", nullable = false)
+    private Integer number;
 
-    @Column(name = "DATE_FROM")
-    private LocalDate dateFrom;
+    @Column(name = "VERSION", nullable = false)
+    @Version
+    private Integer version;
 
-    @Column(name = "DATE_TO")
-    private LocalDate dateTo;
+    @Column(name = "DATE_")
+    private LocalDate date;
 
     @Column(name = "AMOUNT")
     private Double amount;
@@ -49,13 +47,13 @@ public class Stage {
     @Column(name = "TOTAL_AMOUNT")
     private Double totalAmount;
 
+    @InstanceName
     @Column(name = "DESCRIPTION")
-    @Lob
     private String description;
 
-    @Column(name = "VERSION", nullable = false)
-    @Version
-    private Integer version;
+    @JoinColumn(name = "STAGE_ID")
+    @OneToOne(fetch = FetchType.LAZY)
+    private Stage stage;
 
     @CreatedBy
     @Column(name = "CREATED_BY")
@@ -84,46 +82,12 @@ public class Stage {
     @Temporal(TemporalType.TIMESTAMP)
     private Date deletedDate;
 
-    @OnDeleteInverse(DeletePolicy.CASCADE)
-    @JoinColumn(name = "CONTRACT_ID", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Contract contract;
-
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "stage")
-    private Invoice invoice;
-    @OneToOne(fetch = FetchType.LAZY, mappedBy = "stage")
-    private ServiceCompletionCertificate serviceCompletionCertificate;
-
-    public ServiceCompletionCertificate getServiceCompletionCertificate() {
-        return serviceCompletionCertificate;
+    public Stage getStage() {
+        return stage;
     }
 
-    public void setServiceCompletionCertificate(ServiceCompletionCertificate serviceCompletionCertificate) {
-        this.serviceCompletionCertificate = serviceCompletionCertificate;
-    }
-
-    public Invoice getInvoice() {
-        return invoice;
-    }
-
-    public void setInvoice(Invoice invoice) {
-        this.invoice = invoice;
-    }
-
-    public Contract getContract() {
-        return contract;
-    }
-
-    public void setContract(Contract contract) {
-        this.contract = contract;
-    }
-
-    public void setVat(Double vat) {
-        this.vat = vat;
-    }
-
-    public Double getVat() {
-        return vat;
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public String getDescription() {
@@ -142,6 +106,14 @@ public class Stage {
         this.totalAmount = totalAmount;
     }
 
+    public Double getVat() {
+        return vat;
+    }
+
+    public void setVat(Double vat) {
+        this.vat = vat;
+    }
+
     public Double getAmount() {
         return amount;
     }
@@ -150,28 +122,20 @@ public class Stage {
         this.amount = amount;
     }
 
-    public LocalDate getDateTo() {
-        return dateTo;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setDateTo(LocalDate dateTo) {
-        this.dateTo = dateTo;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public LocalDate getDateFrom() {
-        return dateFrom;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
-    public void setDateFrom(LocalDate dateFrom) {
-        this.dateFrom = dateFrom;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public Integer getNumber() {
+        return number;
     }
 
     public Date getDeletedDate() {

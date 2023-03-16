@@ -2,6 +2,7 @@ package com.gazpromtrans.trainingtasknew.screen.contract;
 
 import com.gazpromtrans.trainingtasknew.entity.*;
 import com.gazpromtrans.trainingtasknew.screen.invoice.InvoiceEdit;
+import com.gazpromtrans.trainingtasknew.screen.servicecompletioncertificate.ServiceCompletionCertificateEdit;
 import io.jmix.bpmui.processform.ProcessFormContext;
 import io.jmix.bpmui.processform.annotation.Outcome;
 import io.jmix.bpmui.processform.annotation.Param;
@@ -267,13 +268,15 @@ public class ContractEdit extends StandardEditor<Contract> {
     @Subscribe("stageTable.createInvoice")
     public void onStageTableCreateInvoice(Action.ActionPerformedEvent event) {
         if (stageTable.getSingleSelected().getInvoice() != null) {
-            screenBuilders.editor(Invoice.class, this)
+            StandardEditor<Invoice> editor = screenBuilders.editor(Invoice.class, this)
                     .editEntity(stageTable.getSingleSelected().getInvoice())
+                    .withParentDataContext(getScreenData().getDataContext())
                     .withOpenMode(OpenMode.DIALOG)
-                    .build()
-                    .show();
+                    .withScreenClass(InvoiceEdit.class)
+                    .build();
+            editor.show();
         } else {
-            screenBuilders.editor(Invoice.class, this)
+            StandardEditor<Invoice> editor = screenBuilders.editor(Invoice.class, this)
                     .newEntity()
                     .withInitializer(invoice -> {
                         invoice.setAmount(stageTable.getSingleSelected().getAmount());
@@ -283,8 +286,48 @@ public class ContractEdit extends StandardEditor<Contract> {
                         invoice.setStage(stageTable.getSingleSelected());
                     })
                     .withOpenMode(OpenMode.DIALOG)
-                    .build()
-                    .show();
+                    .withParentDataContext(getScreenData().getDataContext())
+                    .withScreenClass(InvoiceEdit.class)
+                    .build();
+            editor.addAfterCloseListener(closeEvent -> {
+                if (closeEvent.closedWith(StandardOutcome.COMMIT)) {
+                    stageTable.getSingleSelected().setInvoice(editor.getEditedEntity());
+                }
+            });
+            editor.show();
+        }
+    }
+
+    @Subscribe("stageTable.createCertificate")
+    public void onStageTableCreateCertificate(Action.ActionPerformedEvent event) {
+        if (stageTable.getSingleSelected().getServiceCompletionCertificate() != null) {
+            StandardEditor<ServiceCompletionCertificate> editor = screenBuilders.editor(ServiceCompletionCertificate.class, this)
+                    .editEntity(stageTable.getSingleSelected().getServiceCompletionCertificate())
+                    .withParentDataContext(getScreenData().getDataContext())
+                    .withOpenMode(OpenMode.DIALOG)
+                    .withScreenClass(ServiceCompletionCertificateEdit.class)
+                    .build();
+            editor.show();
+        } else {
+            StandardEditor<ServiceCompletionCertificate> editor = screenBuilders.editor(ServiceCompletionCertificate.class, this)
+                    .newEntity()
+                    .withInitializer(certificate -> {
+                        certificate.setAmount(stageTable.getSingleSelected().getAmount());
+                        certificate.setVat(stageTable.getSingleSelected().getVat());
+                        certificate.setTotalAmount(stageTable.getSingleSelected().getTotalAmount());
+                        certificate.setDescription(stageTable.getSingleSelected().getDescription());
+                        certificate.setStage(stageTable.getSingleSelected());
+                    })
+                    .withOpenMode(OpenMode.DIALOG)
+                    .withParentDataContext(getScreenData().getDataContext())
+                    .withScreenClass(ServiceCompletionCertificateEdit.class)
+                    .build();
+            editor.addAfterCloseListener(closeEvent -> {
+                if (closeEvent.closedWith(StandardOutcome.COMMIT)) {
+                    stageTable.getSingleSelected().setServiceCompletionCertificate(editor.getEditedEntity());
+                }
+            });
+            editor.show();
         }
     }
     

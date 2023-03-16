@@ -49,13 +49,15 @@
                     <entityPicker id="performerField" property="performer"/>
                     <entityPicker id="customerField" property="customer"/>
                     <entityPicker id="stateField" property="state" enable="false"/>
+                    <textField id="customerSignerField" property="customerSigner"/>
+                    <textField id="performerSignerField" property="performerSigner"/>
                 </column>
             </form>
             <buttonsPanel>
-                <fileMultiUpload id="filesField" caption = "Загрузка фалов"/>
-                <button id="unLoad" action ="unLoadFiles"/>
-                <button id="changeState" action ="changeState"/>
-                <button id="stateCancel" action ="stateCancel"/>
+                <fileMultiUpload id="filesField" caption="Загрузка фалов"/>
+                <button id="unLoad" action="unLoadFiles"/>
+                <button id="changeState" action="changeState"/>
+                <button id="stateCancel" action="stateCancel"/>
             </buttonsPanel>
             <groupBox id="stageBox" caption="msg://com.gazpromtrans.trainingtasknew.entity/Contract.stage">
                 <table id="stageTable" dataContainer="stageDc" width="100%" height="200px">
@@ -64,6 +66,7 @@
                         <action id="edit" type="edit"/>
                         <action id="remove" type="remove"/>
                         <action id="createInvoice" trackSelection="true"/>
+                        <action id="createCertificate" trackSelection="true"/>
                     </actions>
                     <columns>
                         <column id="name"/>
@@ -79,6 +82,7 @@
                         <button action="stageTable.edit" caption="msg://button2.caption"/>
                         <button action="stageTable.remove" caption="msg://button3.caption"/>
                         <button action="stageTable.createInvoice" caption="msg://button.caption"/>
+                        <button action="stageTable.createCertificate" caption="msg://button4.caption"/>
                     </buttonsPanel>
                 </table>
             </groupBox>
