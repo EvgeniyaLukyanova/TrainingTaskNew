@@ -44,7 +44,8 @@ import java.util.*;
             },
         params = {
                 @Param(name = "item"),
-                @Param(name = "state")
+                @Param(name = "state"),
+                @Param(name = "userList")
             }
 )
 @UiController("Contract.edit")
@@ -85,6 +86,8 @@ public class ContractEdit extends StandardEditor<Contract> {
     protected Contract contract;
     @ProcessFormParam(name = "state")
     protected String state;
+    @ProcessFormParam(name = "userList")
+    protected List<User> userList;
     @Autowired
     private Action changeState;
     @Autowired
@@ -178,6 +181,7 @@ public class ContractEdit extends StandardEditor<Contract> {
         State st = dataManager.load(State.class).condition(PropertyCondition.equal("name", "Отеменён")).optional().orElse(null);
         getEditedEntity().setState(st);
         closeWithDefaultAction();
+        System.out.println(userList);
 //        processFormContext.taskCompletion()
 //                .withOutcome("stateCancel")
 //                .saveInjectedProcessVariables()
