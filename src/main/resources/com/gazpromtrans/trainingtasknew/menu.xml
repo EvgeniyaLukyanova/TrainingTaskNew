@@ -13,6 +13,7 @@
               caption="msg://com.gazpromtrans.trainingtasknew.screen.invoice/invoiceBrowse.menu"/>
         <item screen="ServiceCompletionCertificate.browse"
               caption="msg://com.gazpromtrans.trainingtasknew.screen.servicecompletioncertificate/serviceCompletionCertificateBrowse.menu"/>
+        <item screen="BlankScreen" caption="msg://com.gazpromtrans.trainingtasknew.screen.blank/blankScreen.caption"/>
     </menu>
 
 </menu-config>

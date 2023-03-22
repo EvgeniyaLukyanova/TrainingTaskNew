@@ -26,7 +26,7 @@ import java.util.UUID;
         @Index(name = "IDX_CONTRACT_PERFORMER", columnList = "PERFORMER_ID"),
         @Index(name = "IDX_CONTRACT_STATE", columnList = "STATE_ID")
 })
-@Entity
+@Entity(name = "Contract")
 public class Contract {
     @JmixGeneratedValue
     @Column(name = "ID", nullable = false)

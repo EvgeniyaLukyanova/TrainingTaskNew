@@ -3,11 +3,9 @@ package com.gazpromtrans.trainingtasknew.screen.contract;
 import com.gazpromtrans.trainingtasknew.entity.*;
 import com.gazpromtrans.trainingtasknew.screen.invoice.InvoiceEdit;
 import com.gazpromtrans.trainingtasknew.screen.servicecompletioncertificate.ServiceCompletionCertificateEdit;
+import io.jmix.bpm.data.form.FormParam;
 import io.jmix.bpmui.processform.ProcessFormContext;
-import io.jmix.bpmui.processform.annotation.Outcome;
-import io.jmix.bpmui.processform.annotation.Param;
-import io.jmix.bpmui.processform.annotation.ProcessForm;
-import io.jmix.bpmui.processform.annotation.ProcessFormParam;
+import io.jmix.bpmui.processform.annotation.*;
 import io.jmix.core.DataManager;
 import io.jmix.core.FetchPlan;
 import io.jmix.core.FileRef;
@@ -88,6 +86,10 @@ public class ContractEdit extends StandardEditor<Contract> {
     protected String state;
     @ProcessFormParam(name = "userList")
     protected List<User> userList;
+
+   // @Autowired
+    //@ProcessVariable(name = "userList")
+    //protected List<User> userList;
     @Autowired
     private Action changeState;
     @Autowired
@@ -98,6 +100,8 @@ public class ContractEdit extends StandardEditor<Contract> {
     private Button stateCancel;
     @Autowired
     private Table<Stage> stageTable;
+    @Autowired
+    private CurrentAuthentication currentAuthentication;
 
     @Subscribe("unLoadFiles")
     public void onUnLoadFiles(Action.ActionPerformedEvent event) {
@@ -181,7 +185,6 @@ public class ContractEdit extends StandardEditor<Contract> {
         State st = dataManager.load(State.class).condition(PropertyCondition.equal("name", "Отеменён")).optional().orElse(null);
         getEditedEntity().setState(st);
         closeWithDefaultAction();
-        System.out.println(userList);
 //        processFormContext.taskCompletion()
 //                .withOutcome("stateCancel")
 //                .saveInjectedProcessVariables()
@@ -206,18 +209,26 @@ public class ContractEdit extends StandardEditor<Contract> {
     @Subscribe
     public void onAfterCommitChanges(AfterCommitChangesEvent event) {
         if (state != null) {
+            User user = dataManager.load(User.class)
+                    .query("select u from User u where u.username = :username")
+                    .parameter("username", currentAuthentication.getUser().getUsername())
+                    .one();
+//            Map<String, Object> params = processFormContext.getTask().getProcessVariables();
+//            List<User> userList = (List<User>) params.get("userList");
+//            userList.add(user);
+            userList.add(user);
             State st = dataManager.load(State.class).condition(PropertyCondition.equal("name", state)).optional().orElse(null);
             if (getEditedEntity().getState().equals(st)) {
                 processFormContext.taskCompletion()
                         .withOutcome("changeState")
-                        .saveInjectedProcessVariables()
+                        .addProcessVariable("userList", userList)
                         .complete();
             }
             State stCancel = dataManager.load(State.class).condition(PropertyCondition.equal("name", "Отеменён")).optional().orElse(null);
             if (getEditedEntity().getState().equals(stCancel)) {
                 processFormContext.taskCompletion()
                         .withOutcome("stateCancel")
-                        .saveInjectedProcessVariables()
+                        .addProcessVariable("userList", userList)
                         .complete();
             }
         }

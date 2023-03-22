@@ -18,7 +18,9 @@ import org.springframework.stereotype.Component;
 import org.flowable.engine.delegate.TaskListener;
 
 import javax.annotation.PostConstruct;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class TaskCompletedEmailSender implements TaskListener {
@@ -46,24 +48,19 @@ public class TaskCompletedEmailSender implements TaskListener {
 
     @Override
     public void notify(DelegateTask delegateTask) {
-        //List<User> userList = (List<User>) runtimeService.getVariable(delegateTask.getExecutionId(), "userList");
-        //delegateTask.getVariables();
-
         Contract contract = (Contract) delegateTask.getVariable("contract");
-        //log.info(userList.toString());
-        User user = dataManager.load(User.class)
-                .query("select u from User u where u.username = :username")
-                .parameter("username", currentAuthentication.getUser().getUsername())
-                .one();
-        String emailTitle = "Смена статуса";
-        String emailBody = "По договору №" + contract.getNumber() + "\n" +
-                "был изменен статус на " + contract.getState().getName();
-        EmailInfo emailInfo = EmailInfoBuilder.create()
-                .setAddresses(user.getEmail())
-                .setSubject(emailTitle)
-                .setFrom(null)
-                .setBody(emailBody)
-                .build();
-        emailer.sendEmailAsync(emailInfo);
+        List<User> listUser = (List<User>) delegateTask.getVariable("userList");
+        Set<User> userList = new HashSet<User>(listUser);
+        for (User user : userList) {
+            String emailTitle = "Смена статуса";
+            String emailBody = user.getUsername() + ", по договору №" + contract.getNumber() + "\n" +
+                    "был изменен статус на " + contract.getState().getName();
+            EmailInfo emailInfo = EmailInfoBuilder.create()
+                    .setAddresses(user.getEmail())
+                    .setSubject(emailTitle)
+                    .setBody(emailBody)
+                    .build();
+            emailer.sendEmailAsync(emailInfo);
+        }
     }
 }

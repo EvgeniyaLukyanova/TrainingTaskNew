@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <window xmlns="http://jmix.io/schema/ui/window"
         xmlns:c="http://jmix.io/schema/ui/jpql-condition"
+        xmlns:search="http://jmix.io/schema/search/ui"
         caption="msg://contractBrowse.caption"
         focusComponent="contractsTable">
     <data readOnly="true">
@@ -36,6 +37,7 @@
     <dialogMode height="600"
                 width="800"/>
     <layout expand="contractsTable" spacing="true">
+        <search:searchField id="searchId" entities="Contract"/>
         <filter id="filter"
                 dataLoader="contractsDl">
             <properties include=".*"/>
