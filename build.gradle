@@ -38,7 +38,6 @@ dependencies {
     implementation 'io.jmix.ui:jmix-ui-starter'
     implementation 'io.jmix.ui:jmix-ui-data-starter'
     implementation 'io.jmix.ui:jmix-ui-themes-compiled'
-    implementation 'io.jmix.ui:jmix-ui-widgets-compiled'
     implementation 'io.jmix.security:jmix-security-starter'
     implementation 'io.jmix.security:jmix-security-ui-starter'
     implementation 'io.jmix.security:jmix-security-data-starter'
@@ -47,6 +46,14 @@ dependencies {
     implementation 'io.jmix.datatools:jmix-datatools-ui-starter'
     implementation 'io.jmix.bpm:jmix-bpm-starter'
     implementation 'io.jmix.bpm:jmix-bpm-ui-starter'
+    implementation 'io.jmix.reports:jmix-reports-starter'
+    implementation 'io.jmix.reports:jmix-reports-ui-starter'
+    implementation 'io.jmix.notifications:jmix-notifications-starter'
+    implementation 'io.jmix.notifications:jmix-notifications-ui-starter'
+    implementation 'io.jmix.email:jmix-email-starter'
+    implementation 'io.jmix.email:jmix-email-ui-starter'
+    implementation "io.jmix.search:jmix-search-starter"
+    implementation "io.jmix.search:jmix-search-ui-starter"
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation("io.jmix.appsettings:jmix-appsettings-starter")
@@ -59,8 +66,21 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     implementation 'org.postgresql:postgresql'
+    implementation 'io.jmix.quartz:jmix-quartz-starter'
+    implementation 'io.jmix.translations:jmix-translations-ru'
+    implementation 'io.jmix.ui:jmix-charts-starter'
+    widgets 'io.jmix.ui:jmix-charts-widgets'
+    widgets 'io.jmix.ui:jmix-ui-widgets'
+    widgets 'io.jmix.ui:jmix-ui-widgets'
+    widgets 'io.jmix.ui:jmix-charts-widgets'
+    implementation 'io.jmix.ui:jmix-charts-starter'
 }
 
 test {
     useJUnitPlatform()
+}
+
+compileWidgets {
+    generate "com.gazpromtrans.trainingtasknew.widgets.CustomWidgetSet"
+    includePaths("**/io/jmix/**/widget/**", "**/com/gazpromtrans/trainingtasknew/widgets/**")
 }
