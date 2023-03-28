@@ -30,19 +30,30 @@ public class StageEdit extends StandardEditor<Stage> {
 
     @Subscribe("amountField")
     public void onAmountFieldValueChange(HasValue.ValueChangeEvent<Double> event) {
-        if (contractField.getValue().getPerformer() != null) {
-            if (contractField.getValue().getPerformer().getEscapeVat() == true) {
+        if (getEditedEntity().getContract().getPerformer() != null) {
+            if (getEditedEntity().getContract().getPerformer().getEscapeVat() == true) {
                 VatSettings vatSettings = appSettings.load(VatSettings.class);
-                vatField.setValue(event.getValue()*vatSettings.getVat()/100);
-                totalAmountField.setValue(event.getValue()*(1+vatSettings.getVat()/100));
+                getEditedEntity().setVat(event.getValue()*vatSettings.getVat()/100);
+                getEditedEntity().setAmount(event.getValue()*(1+vatSettings.getVat()/100));
+                //vatField.setValue(event.getValue()*vatSettings.getVat()/100);
+                //totalAmountField.setValue(event.getValue()*(1+vatSettings.getVat()/100));
             } else {
-                vatField.setValue(0.0);
-                totalAmountField.setValue(event.getValue());
+                getEditedEntity().setVat(0.0);
+                getEditedEntity().setAmount(event.getValue());
+                //vatField.setValue(0.0);
+                //totalAmountField.setValue(event.getValue());
             }
         } else {
-            vatField.setValue(0.0);
-            totalAmountField.setValue(event.getValue());
+            getEditedEntity().setVat(0.0);
+            getEditedEntity().setAmount(event.getValue());
+            //vatField.setValue(0.0);
+            //totalAmountField.setValue(event.getValue());
         }
+    }
+
+    @Subscribe
+    public void onBeforeShow(BeforeShowEvent event) {
+        getEditedEntity();
     }
 
 

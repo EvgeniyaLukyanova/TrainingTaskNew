@@ -39,12 +39,13 @@ import java.util.*;
         outcomes = {
                 @Outcome(id = "changeState"),
                 @Outcome(id = "stateCancel"),
-            },
+        },
         params = {
                 @Param(name = "item"),
                 @Param(name = "state"),
-                @Param(name = "userList")
-            }
+                @Param(name = "userList"),
+                @Param(name = "manager")
+        }
 )
 @UiController("Contract.edit")
 @UiDescriptor("contract-edit.xml")
@@ -87,7 +88,7 @@ public class ContractEdit extends StandardEditor<Contract> {
     @ProcessFormParam(name = "userList")
     protected List<User> userList;
 
-   // @Autowired
+    // @Autowired
     //@ProcessVariable(name = "userList")
     //protected List<User> userList;
     @Autowired
@@ -102,6 +103,9 @@ public class ContractEdit extends StandardEditor<Contract> {
     private Table<Stage> stageTable;
     @Autowired
     private CurrentAuthentication currentAuthentication;
+
+    @Autowired
+    private RuntimeService runtimeService;
 
     @Subscribe("unLoadFiles")
     public void onUnLoadFiles(Action.ActionPerformedEvent event) {
@@ -162,16 +166,16 @@ public class ContractEdit extends StandardEditor<Contract> {
         }
         filesField.addQueueUploadCompleteListener(
                 queueUploadCompleteEvent -> {
-                        for (Map.Entry<UUID, String> entry : filesField.getUploadsMap().entrySet()) {
-                            UUID fileId = entry.getKey();
-                            String fileName = entry.getValue();
-                            FileRef fileRef = temporaryStorage.putFileIntoStorage(fileId, fileName);
-                            FileDescriptor fileDescriptor = getScreenData().getDataContext().create(FileDescriptor.class);
-                            fileDescriptor.setName(entry.getValue());
-                            fileDescriptor.setFile(fileRef);
-                            fileDescriptor.setContract(getEditedEntity());
-                            getScreenData().getDataContext().commit();
-                        }
+                    for (Map.Entry<UUID, String> entry : filesField.getUploadsMap().entrySet()) {
+                        UUID fileId = entry.getKey();
+                        String fileName = entry.getValue();
+                        FileRef fileRef = temporaryStorage.putFileIntoStorage(fileId, fileName);
+                        FileDescriptor fileDescriptor = getScreenData().getDataContext().create(FileDescriptor.class);
+                        fileDescriptor.setName(entry.getValue());
+                        fileDescriptor.setFile(fileRef);
+                        fileDescriptor.setContract(getEditedEntity());
+                        getScreenData().getDataContext().commit();
+                    }
                     notifications.create()
                             .withCaption("Загруженные файлы: " + filesField.getUploadsMap().values())
                             .show();
@@ -180,7 +184,7 @@ public class ContractEdit extends StandardEditor<Contract> {
         );
     }
 
-    @Subscribe("stateCancel")
+ /*   @Subscribe("stateCancel")
     public void onStateCancel(Action.ActionPerformedEvent event) {
         State st = dataManager.load(State.class).condition(PropertyCondition.equal("name", "Отеменён")).optional().orElse(null);
         getEditedEntity().setState(st);
@@ -190,13 +194,65 @@ public class ContractEdit extends StandardEditor<Contract> {
 //                .saveInjectedProcessVariables()
 //                .complete();
 //        closeWithDefaultAction();
-    }
+    }*/
 
     @Subscribe("changeState")
     public void onChangeState(Action.ActionPerformedEvent event) {
+        setTaskState("changeState");
+    }
+
+    @Subscribe("stateCancel")
+    public void onChangeCancel(Action.ActionPerformedEvent event) {
+        setTaskState("stateCancel");
+    }
+
+    protected void setTaskState(String selectedState){
         State st = dataManager.load(State.class).condition(PropertyCondition.equal("name", state)).optional().orElse(null);
         getEditedEntity().setState(st);
-        closeWithDefaultAction();
+//        dataManager.save(getEditedEntity());
+
+        if("changeState".equals(selectedState)) {
+            List<User> users = dataManager.load(User.class).query("select u from User u").list();
+            dialogs.createInputDialog(this)
+                    .withCaption("Выберите менеджера:")
+                    .withParameters(
+                            InputParameter.parameter("manager")
+                                    .withField(() -> {
+                                        EntityComboBox<User> field = uiComponents.create(
+                                                EntityComboBox.of(User.class));
+                                        field.setOptionsList(users);
+                                        field.setCaption("Менеджер");
+                                        field.setWidthFull();
+                                        return field;
+                                    })
+                    )
+                    .withActions(DialogActions.OK)
+                    .withCloseListener(closeEvent -> {
+                        if (closeEvent.closedWith(DialogOutcome.OK)) {
+                            User manager = closeEvent.getValue("manager");
+                            processFormContext.taskCompletion()
+                                    .withOutcome(selectedState)
+                                    .addProcessVariable("manager", manager)
+                                    .addProcessVariable("userList", userList)
+                                    .complete();
+
+
+//                        runtimeService.startProcessInstanceByKey("process", params);
+                            closeWithDefaultAction();
+//                            closeWithCommit();
+                        }
+                    })
+                    .show();
+        } else {
+            processFormContext.taskCompletion()
+                    .withOutcome(selectedState)
+                    .addProcessVariable("userList", userList)
+                    .complete();
+        }
+
+//        this.closeWithDefaultAction();
+    }
+
 //        OperationResult r = closeWithDefaultAction();
 //        r.then(() -> {
 //            processFormContext.taskCompletion()
@@ -204,9 +260,10 @@ public class ContractEdit extends StandardEditor<Contract> {
 //                    .saveInjectedProcessVariables()
 //                    .complete();
 //        });
-    }
 
-    @Subscribe
+
+
+    //@Subscribe
     public void onAfterCommitChanges(AfterCommitChangesEvent event) {
         if (state != null) {
             User user = dataManager.load(User.class)
@@ -269,7 +326,7 @@ public class ContractEdit extends StandardEditor<Contract> {
                     .sum());
             vatField.setValue(event.getSource().getItems()
                     .stream()
-                    .filter(e ->  e.getVat() != null)
+                    .filter(e -> e.getVat() != null)
                     .mapToDouble(e -> e.getVat())
                     .filter(e -> e != 0.0).sum());
             totalAmountField.setValue(event.getSource().getItems()
@@ -345,5 +402,5 @@ public class ContractEdit extends StandardEditor<Contract> {
             editor.show();
         }
     }
-    
+
 }

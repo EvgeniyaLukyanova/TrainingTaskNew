@@ -40,6 +40,7 @@ public class ContractEventListener_1 {
                         .one();
                 userList.add(user);
                 params.put("userList", userList);
+                params.put("manager", user);
                 runtimeService.startProcessInstanceByKey(
                         "process",
                         params);
